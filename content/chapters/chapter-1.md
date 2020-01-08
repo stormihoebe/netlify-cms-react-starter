@@ -4,5 +4,6 @@ description: Getting started with insurance....
 image: /images/uploads/vyouw5byhlc.jpeg
 modules:
   - module: Getting Started
+  - module: Step 2
 ---
 
