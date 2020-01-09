@@ -1,6 +1,6 @@
 {
-  "title": "asdf",
-  "description": "sadf",
+  "title": "My first Tenant",
+  "description": "This is the description for the first tenant",
   "headerImage": "/images/uploads/mark-chang-74-3.jpg",
-  "color": "asdfsdf"
+  "color": "blue"
 }
