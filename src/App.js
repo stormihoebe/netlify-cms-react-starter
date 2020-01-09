@@ -4,7 +4,7 @@ import Helmet from 'react-helmet'
 
 import ScrollToTop from './components/ScrollToTop'
 import Meta from './components/Meta'
-import LandingPage from './views/landing_page'
+import TopicLandingPage from './views/topic_landing_page'
 import Blog from './views/Blog'
 import SinglePost from './views/SinglePost'
 import NoMatch from './views/NoMatch'
@@ -33,14 +33,16 @@ class App extends Component {
     data,
   }
 
-  getDocument = (collection, name) =>
-    this.state.data[collection] &&
-    this.state.data[collection].filter(page => page.name === name)[0]
-
+  getDocument = (collection, key, value) => {
+    return (
+      this.state.data[collection] &&
+      this.state.data[collection].filter(page => page[key] === value)[0]
+    )
+  }
   getDocuments = collection => this.state.data[collection] || []
 
   render() {
-    const globalSettings = this.getDocument('settings', 'global')
+    const globalSettings = this.getDocument('settings', 'name', 'global')
     const {
       siteTitle,
       siteUrl,
@@ -57,6 +59,7 @@ class App extends Component {
       category => categoriesFromPosts.indexOf(category.name.toLowerCase()) >= 0
     )
     const CURRENT_TENANT = 'asdf'
+    const DEFAULT_TOPIC = 'life-insurance'
     return (
       <Router>
         <div className="React-Wrap">
@@ -88,14 +91,30 @@ class App extends Component {
             <RouteWithMeta
               path="/"
               exact
-              component={LandingPage}
-              fields={this.getDocument('tenants', CURRENT_TENANT)}
+              component={TopicLandingPage}
+              tenant={this.getDocument('tenants', 'name', CURRENT_TENANT)}
+              topic={this.getDocument('topics', 'name', DEFAULT_TOPIC)}
+              getDocument={this.getDocument}
             />
+            {this.getDocuments('topics').map(topic => {
+              const path = slugify(`/${topic.title}`)
+              return (
+                <RouteWithMeta
+                  key={path}
+                  path={path}
+                  exact
+                  component={TopicLandingPage}
+                  tenant={this.getDocument('tenants', 'name', CURRENT_TENANT)}
+                  topic={this.getDocument('topics', 'name', topic.name)}
+                  getDocument={this.getDocument}
+                />
+              )
+            })}
             <RouteWithMeta
               path="/blog/"
               exact
               component={Blog}
-              fields={this.getDocument('pages', 'blog')}
+              fields={this.getDocument('pages', 'name', 'blog')}
               posts={posts}
               postCategories={postCategories}
             />
@@ -128,7 +147,7 @@ class App extends Component {
                   path={path}
                   exact
                   component={Blog}
-                  fields={this.getDocument('pages', 'blog')}
+                  fields={this.getDocument('pages', 'name', 'blog')}
                   posts={categoryPosts}
                   postCategories={postCategories}
                 />
