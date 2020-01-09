@@ -1,5 +1,13 @@
 {
   "title": "Chapter 1. Getting Started",
   "description": "This is where you start",
-  "image": "/images/uploads/ng-32703.jpg"
+  "image": "/images/uploads/ng-32703.jpg",
+  "modules": [
+    {
+      "module": "Step 1"
+    },
+    {
+      "module": "Next Step"
+    }
+  ]
 }
