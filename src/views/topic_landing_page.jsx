@@ -7,7 +7,7 @@ export default ({ tenant, topic, getDocument }) => {
   const { logo, color } = tenant
   const { chapters, title, description, image } = topic
   return (
-    <div className="About">
+    <div>
       TenantLogo: {logo}
       <PageHeader
         title={title}

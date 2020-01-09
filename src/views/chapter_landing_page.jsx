@@ -12,7 +12,7 @@ export default ({
 }) => {
   const { title, description, image, modules } = chapter
   return (
-    <div className="About">
+    <div>
       tenantLogo: {logo}
       <PageHeader
         title={title}
