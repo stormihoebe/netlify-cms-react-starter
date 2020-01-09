@@ -1,6 +1,7 @@
 {
   "title": "My first Tenant",
-  "description": "This is the description for the first tenant",
-  "headerImage": "/images/uploads/mark-chang-74-3.jpg",
+  "teamName": "The Tenant Team",
+  "phoneNumber": "888-xxx-888",
+  "logo": "/images/uploads/ng-32703.jpg",
   "color": "blue"
 }
