@@ -1,5 +1,10 @@
 {
   "title": "life insurance",
   "description": "description",
-  "image": "/images/uploads/isabella juskova.jpg"
+  "image": "/images/uploads/isabella juskova.jpg",
+  "chapters": [
+    {
+      "chapter": "Chapter 1. Getting Started"
+    }
+  ]
 }
