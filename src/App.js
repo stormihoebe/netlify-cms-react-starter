@@ -4,11 +4,9 @@ import Helmet from 'react-helmet'
 
 import ScrollToTop from './components/ScrollToTop'
 import Meta from './components/Meta'
-import Home from './views/Home'
-import About from './views/About'
+import LandingPage from './views/landing_page'
 import Blog from './views/Blog'
 import SinglePost from './views/SinglePost'
-import Contact from './views/Contact'
 import NoMatch from './views/NoMatch'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
@@ -32,7 +30,7 @@ const RouteWithMeta = ({ component: Component, ...props }) => (
 
 class App extends Component {
   state = {
-    data
+    data,
   }
 
   getDocument = (collection, name) =>
@@ -41,14 +39,14 @@ class App extends Component {
 
   getDocuments = collection => this.state.data[collection] || []
 
-  render () {
+  render() {
     const globalSettings = this.getDocument('settings', 'global')
     const {
       siteTitle,
       siteUrl,
       siteDescription,
       socialMediaCard,
-      headerScripts
+      headerScripts,
     } = globalSettings
 
     const posts = this.getDocuments('posts').filter(
@@ -58,13 +56,13 @@ class App extends Component {
     const postCategories = this.getDocuments('postCategories').filter(
       category => categoriesFromPosts.indexOf(category.name.toLowerCase()) >= 0
     )
-
+    const CURRENT_TENANT = 'asdf'
     return (
       <Router>
-        <div className='React-Wrap'>
+        <div className="React-Wrap">
           <ScrollToTop />
           <ServiceWorkerNotifications reloadOnUpdate />
-          <GithubCorner url='https://github.com/Jinksi/netlify-cms-react-starter' />
+          <GithubCorner url="https://github.com/Jinksi/netlify-cms-react-starter" />
           <Helmet
             defaultTitle={siteTitle}
             titleTemplate={`${siteTitle} | %s`}
@@ -88,34 +86,19 @@ class App extends Component {
 
           <Switch>
             <RouteWithMeta
-              path='/'
+              path="/"
               exact
-              component={Home}
-              description={siteDescription}
-              fields={this.getDocument('pages', 'home')}
+              component={LandingPage}
+              fields={this.getDocument('tenants', CURRENT_TENANT)}
             />
             <RouteWithMeta
-              path='/about/'
-              exact
-              component={About}
-              fields={this.getDocument('pages', 'about')}
-            />
-            <RouteWithMeta
-              path='/contact/'
-              exact
-              component={Contact}
-              fields={this.getDocument('pages', 'contact')}
-              siteTitle={siteTitle}
-            />
-            <RouteWithMeta
-              path='/blog/'
+              path="/blog/"
               exact
               component={Blog}
               fields={this.getDocument('pages', 'blog')}
               posts={posts}
               postCategories={postCategories}
             />
-
             {posts.map((post, index) => {
               const path = slugify(`/blog/${post.title}`)
               const nextPost = posts[index - 1]
