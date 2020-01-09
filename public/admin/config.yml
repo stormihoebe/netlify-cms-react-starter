@@ -12,8 +12,34 @@ collections: # A list of collections the CMS should be able to edit
     label: Tenant
     folder: content/tenants
     create: true
-    delete: false
+    delete: true
     extension: 'json'
+    editor:
+      preview: true
+    slug: '{{slug}}'
+    fields:
+      - label: Title
+        name: title
+        widget: string
+      - label: Team Name
+        name: teamName
+        widget: string
+      - label: Phone Number
+        name: phoneNumber
+        widget: string
+      - label: Logo
+        name: logo
+        widget: image
+      - label: Brand Color
+        name: color
+        widget: string
+
+  - name: topic
+    label: Topic
+    folder: content/topics
+    create: true
+    extension: 'json'
+    delete: true
     editor:
       preview: true
     slug: '{{slug}}'
@@ -24,12 +50,22 @@ collections: # A list of collections the CMS should be able to edit
       - label: Description
         name: description
         widget: string
-      - label: Header Image
-        name: headerImage
+      - label: Image
+        name: image
         widget: image
-      - label: Brand Color
-        name: color
-        widget: string
+      - label: Chapters
+        name: chapters
+        widget: list
+        required: false
+        fields:
+          - label: Chapter
+            name: chapter
+            widget: relation
+            collection: chapter
+            searchFields: ['title', topic]
+            valueField: 'title'
+            displayFields: ['topic', 'title']
+
   - name: chapter
     label: Chapter
     folder: content/chapters
@@ -61,6 +97,15 @@ collections: # A list of collections the CMS should be able to edit
             searchFields:
               - title
             valueField: title
+      - label: Topic
+        name: topic
+        widget: relation
+        collection: topic
+        required: true
+        searchFields: ['title']
+        valueField: 'title'
+        displayFields: ['title']
+
   - name: chapterModules
     label: Module
     editor:
@@ -103,12 +148,7 @@ collections: # A list of collections the CMS should be able to edit
             name: 'meta'
             widget: 'object'
             fields:
-              - {
-                  label: Title,
-                  name: title,
-                  widget: string,
-                  required: false,
-                }
+              - { label: Title, name: title, widget: string, required: false }
               - {
                   label: Description,
                   name: description,
@@ -141,12 +181,7 @@ collections: # A list of collections the CMS should be able to edit
             name: 'meta'
             widget: 'object'
             fields:
-              - {
-                  label: Title,
-                  name: title,
-                  widget: string,
-                  required: false,
-                }
+              - { label: Title, name: title, widget: string, required: false }
               - {
                   label: Description,
                   name: description,
@@ -181,12 +216,7 @@ collections: # A list of collections the CMS should be able to edit
             name: 'meta'
             widget: 'object'
             fields:
-              - {
-                  label: Title,
-                  name: title,
-                  widget: string,
-                  required: false,
-                }
+              - { label: Title, name: title, widget: string, required: false }
               - {
                   label: Description,
                   name: description,
@@ -220,12 +250,7 @@ collections: # A list of collections the CMS should be able to edit
             name: 'meta'
             widget: 'object'
             fields:
-              - {
-                  label: Title,
-                  name: title,
-                  widget: string,
-                  required: false,
-                }
+              - { label: Title, name: title, widget: string, required: false }
               - {
                   label: Description,
                   name: description,
@@ -299,12 +324,7 @@ collections: # A list of collections the CMS should be able to edit
               widget: string,
               required: false,
             }
-          - {
-              label: Noindex,
-              name: noindex,
-              widget: boolean,
-              required: false,
-            }
+          - { label: Noindex, name: noindex, widget: boolean, required: false }
 
   - name: postCategories
     label: Post Category
@@ -334,12 +354,7 @@ collections: # A list of collections the CMS should be able to edit
               widget: string,
               required: false,
             }
-          - {
-              label: Noindex,
-              name: noindex,
-              widget: boolean,
-              required: false,
-            }
+          - { label: Noindex, name: noindex, widget: boolean, required: false }
 
   - name: 'settings'
     label: 'Settings'
@@ -352,12 +367,7 @@ collections: # A list of collections the CMS should be able to edit
         name: 'global-settings'
         fields:
           - { label: Site Title, name: siteTitle, widget: string }
-          - {
-              label: Site Url,
-              name: siteUrl,
-              widget: string,
-              required: false,
-            }
+          - { label: Site Url, name: siteUrl, widget: string, required: false }
           - {
               label: Site Description,
               name: siteDescription,
@@ -368,12 +378,7 @@ collections: # A list of collections the CMS should be able to edit
             name: socialMediaCard
             widget: object
             fields:
-              - {
-                  label: Image,
-                  name: image,
-                  widget: image,
-                  required: false,
-                }
+              - { label: Image, name: image, widget: image, required: false }
               - {
                   label: Twitter Site Account,
                   name: twitterSiteAccount,
