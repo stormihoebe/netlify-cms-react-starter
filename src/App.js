@@ -1,20 +1,20 @@
 import React, { Component, Fragment } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Helmet from 'react-helmet'
-
 import ScrollToTop from './components/ScrollToTop'
 import Meta from './components/Meta'
 import TopicLandingPage from './views/topic_landing_page'
-import Blog from './views/Blog'
-import SinglePost from './views/SinglePost'
+import ChapterLandingPage from './views/chapter_landing_page'
 import NoMatch from './views/NoMatch'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
-import GithubCorner from './components/GithubCorner'
 import ServiceWorkerNotifications from './components/ServiceWorkerNotifications'
 import data from './data.json'
 import { slugify } from './util/url'
-import { documentHasTerm, getCollectionTerms } from './util/collection'
+import { getCollectionTerms } from './util/collection'
+
+const CURRENT_TENANT = 'asdf'
+const DEFAULT_TOPIC = 'life-insurance'
 
 const RouteWithMeta = ({ component: Component, ...props }) => (
   <Route
@@ -58,14 +58,12 @@ class App extends Component {
     const postCategories = this.getDocuments('postCategories').filter(
       category => categoriesFromPosts.indexOf(category.name.toLowerCase()) >= 0
     )
-    const CURRENT_TENANT = 'asdf'
-    const DEFAULT_TOPIC = 'life-insurance'
+    const currentTenant = this.getDocument('tenants', 'name', CURRENT_TENANT)
     return (
       <Router>
         <div className="React-Wrap">
           <ScrollToTop />
           <ServiceWorkerNotifications reloadOnUpdate />
-          <GithubCorner url="https://github.com/Jinksi/netlify-cms-react-starter" />
           <Helmet
             defaultTitle={siteTitle}
             titleTemplate={`${siteTitle} | %s`}
@@ -92,68 +90,48 @@ class App extends Component {
               path="/"
               exact
               component={TopicLandingPage}
-              tenant={this.getDocument('tenants', 'name', CURRENT_TENANT)}
+              tenant={currentTenant}
               topic={this.getDocument('topics', 'name', DEFAULT_TOPIC)}
               getDocument={this.getDocument}
             />
             {this.getDocuments('topics').map(topic => {
               const path = slugify(`/${topic.title}`)
               return (
-                <RouteWithMeta
-                  key={path}
-                  path={path}
-                  exact
-                  component={TopicLandingPage}
-                  tenant={this.getDocument('tenants', 'name', CURRENT_TENANT)}
-                  topic={this.getDocument('topics', 'name', topic.name)}
-                  getDocument={this.getDocument}
-                />
-              )
-            })}
-            <RouteWithMeta
-              path="/blog/"
-              exact
-              component={Blog}
-              fields={this.getDocument('pages', 'name', 'blog')}
-              posts={posts}
-              postCategories={postCategories}
-            />
-            {posts.map((post, index) => {
-              const path = slugify(`/blog/${post.title}`)
-              const nextPost = posts[index - 1]
-              const prevPost = posts[index + 1]
-              return (
-                <RouteWithMeta
-                  key={path}
-                  path={path}
-                  exact
-                  component={SinglePost}
-                  fields={post}
-                  nextPostURL={nextPost && slugify(`/blog/${nextPost.title}/`)}
-                  prevPostURL={prevPost && slugify(`/blog/${prevPost.title}/`)}
-                />
-              )
-            })}
+                <Fragment>
+                  <RouteWithMeta
+                    key={path}
+                    path={path}
+                    exact
+                    component={TopicLandingPage}
+                    tenant={currentTenant}
+                    topic={this.getDocument('topics', 'name', topic.name)}
+                    getDocument={this.getDocument}
+                  />
+                  {topic.chapters.map(({ chapter: c }) => {
+                    const chapter = this.getDocument('chapters', 'title', c)
+                    const chapterPath = slugify(
+                      `/${topic.title}/${chapter.title}`
+                    )
 
-            {postCategories.map(postCategory => {
-              const slug = slugify(postCategory.title)
-              const path = slugify(`/blog/category/${slug}`)
-              const categoryPosts = posts.filter(post =>
-                documentHasTerm(post, 'categories', slug)
-              )
-              return (
-                <RouteWithMeta
-                  key={path}
-                  path={path}
-                  exact
-                  component={Blog}
-                  fields={this.getDocument('pages', 'name', 'blog')}
-                  posts={categoryPosts}
-                  postCategories={postCategories}
-                />
+                    return (
+                      <RouteWithMeta
+                        key={chapterPath}
+                        path={chapterPath}
+                        exact
+                        component={ChapterLandingPage}
+                        tenant={currentTenant}
+                        chapter={this.getDocument(
+                          'chapters',
+                          'title',
+                          chapter.title
+                        )}
+                        getDocument={this.getDocument}
+                      />
+                    )
+                  })}
+                </Fragment>
               )
             })}
-
             <Route render={() => <NoMatch siteUrl={siteUrl} />} />
           </Switch>
           <Footer />
