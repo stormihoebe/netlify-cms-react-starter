@@ -46,18 +46,10 @@ class App extends Component {
     const {
       siteTitle,
       siteUrl,
-      siteDescription,
       socialMediaCard,
       headerScripts,
     } = globalSettings
 
-    const posts = this.getDocuments('posts').filter(
-      post => post.status !== 'Draft'
-    )
-    const categoriesFromPosts = getCollectionTerms(posts, 'categories')
-    const postCategories = this.getDocuments('postCategories').filter(
-      category => categoriesFromPosts.indexOf(category.name.toLowerCase()) >= 0
-    )
     const currentTenant = this.getDocument('tenants', 'name', CURRENT_TENANT)
     return (
       <Router>
@@ -97,7 +89,7 @@ class App extends Component {
             {this.getDocuments('topics').map(topic => {
               const path = slugify(`/${topic.title}`)
               return (
-                <Fragment>
+                <Fragment key={path}>
                   <RouteWithMeta
                     key={path}
                     path={path}
@@ -112,21 +104,36 @@ class App extends Component {
                     const chapterPath = slugify(
                       `/${topic.title}/${chapter.title}`
                     )
-
+                    const chapterRouteProps = {
+                      key: chapterPath,
+                      path: chapterPath,
+                      component: ChapterLandingPage,
+                      tenant: currentTenant,
+                      topic: topic,
+                      chapter: chapter,
+                      getDocument: this.getDocument,
+                      selectedModule: null,
+                    }
                     return (
-                      <RouteWithMeta
-                        key={chapterPath}
-                        path={chapterPath}
-                        exact
-                        component={ChapterLandingPage}
-                        tenant={currentTenant}
-                        chapter={this.getDocument(
-                          'chapters',
-                          'title',
-                          chapter.title
-                        )}
-                        getDocument={this.getDocument}
-                      />
+                      <Fragment key={chapterPath}>
+                        <RouteWithMeta {...chapterRouteProps} exact />
+
+                        {chapter.modules.map(({ module: m }) => {
+                          const mod = this.getDocument('modules', 'title', m)
+                          const modPath = slugify(
+                            `/${topic.title}/${chapter.title}/${mod.title}`
+                          )
+                          return (
+                            <RouteWithMeta
+                              {...chapterRouteProps}
+                              key={modPath}
+                              path={modPath}
+                              selectedModule={mod}
+                              exact
+                            />
+                          )
+                        })}
+                      </Fragment>
                     )
                   })}
                 </Fragment>

@@ -19,8 +19,8 @@ export default ({ tenant, topic, getDocument }) => {
       {chapters.map(({ chapter: c }) => {
         const chapter = getDocument('chapters', 'title', c)
         return (
-          <Link to={slugify(`/${title}/${chapter.title}/`)}>
-            <div key={chapter.title}>{chapter.title}</div>
+          <Link key={chapter.title} to={slugify(`/${title}/${chapter.title}/`)}>
+            <div>{chapter.title}</div>
           </Link>
         )
       })}

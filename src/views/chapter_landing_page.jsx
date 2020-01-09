@@ -1,7 +1,15 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import { slugify } from '../util/url'
 
-export default ({ tenant: { logo }, chapter, getDocument }) => {
+export default ({
+  tenant: { logo },
+  chapter,
+  getDocument,
+  selectedModule,
+  topic,
+}) => {
   const { title, description, image, modules } = chapter
   return (
     <div className="About">
@@ -11,10 +19,26 @@ export default ({ tenant: { logo }, chapter, getDocument }) => {
         subtitle={description}
         backgroundImage={image}
       />
-      MODULES:
+      CURRENTLY SELECTED MODULE:
+      {selectedModule ? (
+        <Link to={slugify(`/${topic.title}/${title}/`)}>
+          <div>{selectedModule.title}: Click to close module</div>
+        </Link>
+      ) : (
+        'NO MODULE SELECTED'
+      )}
+      <h1>Available MODULES:</h1>
       {modules.map(({ module: m }) => {
         const mod = getDocument('modules', 'title', m)
-        return <div key={mod.title}>{mod.title}</div>
+
+        return (
+          <Link
+            key={mod.title}
+            to={slugify(`/${topic.title}/${title}/${mod.title}`)}
+          >
+            <div>{mod.title}</div>
+          </Link>
+        )
       })}
     </div>
   )
