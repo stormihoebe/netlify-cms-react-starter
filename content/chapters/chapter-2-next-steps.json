@@ -1,5 +1,10 @@
 {
   "title": "Chapter 2. Next Steps",
   "description": "This is what you do next",
-  "image": "/images/uploads/isabella juskova.jpg"
+  "image": "/images/uploads/isabella juskova.jpg",
+  "modules": [
+    {
+      "module": "Moving Forward"
+    }
+  ]
 }
