@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Helmet from 'react-helmet'
-import ScrollToTop from './components/ScrollToTop'
+import ScrollToTop from './components/scroll_top'
 import Meta from './components/Meta'
 import TopicLandingPage from './views/topic_landing_page'
 import ChapterLandingPage from './views/chapter_landing_page'
