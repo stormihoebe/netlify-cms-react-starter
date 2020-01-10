@@ -2,11 +2,11 @@
   "title": "Chapter 1: Getting Started with insurance",
   "description": "Description",
   "image": "/images/uploads/tim-marshall-155597.jpg",
+  "uid": "lifeInsuranceChapter1",
+  "topic": "Life Insurance",
   "modules": [
     {
       "module": "LifeInsuraceChapter1ChoosePolicy"
     }
-  ],
-  "uid": "lifeInsuranceChapter1",
-  "topic": "Life Insurance"
+  ]
 }
