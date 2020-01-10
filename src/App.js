@@ -11,9 +11,8 @@ import Footer from './components/Footer'
 import ServiceWorkerNotifications from './components/ServiceWorkerNotifications'
 import data from './data.json'
 import { slugify } from './util/url'
-import { getCollectionTerms } from './util/collection'
 
-const CURRENT_TENANT = 'asdf'
+const CURRENT_TENANT = 'my-tenant'
 const DEFAULT_TOPIC = 'life-insurance'
 
 const RouteWithMeta = ({ component: Component, ...props }) => (
@@ -51,6 +50,8 @@ class App extends Component {
     } = globalSettings
 
     const currentTenant = this.getDocument('tenants', 'name', CURRENT_TENANT)
+    const topics = this.getDocuments('topics')
+    const defaultTopic = this.getDocument('topics', 'name', DEFAULT_TOPIC)
     return (
       <Router>
         <div className="React-Wrap">
@@ -83,10 +84,10 @@ class App extends Component {
               exact
               component={TopicLandingPage}
               tenant={currentTenant}
-              topic={this.getDocument('topics', 'name', DEFAULT_TOPIC)}
+              topic={defaultTopic}
               getDocument={this.getDocument}
             />
-            {this.getDocuments('topics').map(topic => {
+            {topics.map(topic => {
               const path = slugify(`/${topic.title}`)
               return (
                 <Fragment key={path}>
@@ -100,7 +101,10 @@ class App extends Component {
                     getDocument={this.getDocument}
                   />
                   {topic.chapters.map(({ chapter: c }) => {
-                    const chapter = this.getDocument('chapters', 'title', c)
+                    const chapter = this.getDocument('chapters', 'uid', c)
+                    if (!chapter) {
+                      return null
+                    }
                     const chapterPath = slugify(
                       `/${topic.title}/${chapter.title}`
                     )
@@ -115,11 +119,16 @@ class App extends Component {
                       selectedModule: null,
                     }
                     return (
+                      // todo: Might be better to not make route module
+                      // and add logic for parsing module
+                      // based on url within the chapter component
                       <Fragment key={chapterPath}>
                         <RouteWithMeta {...chapterRouteProps} exact />
-
                         {chapter.modules.map(({ module: m }) => {
-                          const mod = this.getDocument('modules', 'title', m)
+                          const mod = this.getDocument('modules', 'uid', m)
+                          if (!mod) {
+                            return null
+                          }
                           const modPath = slugify(
                             `/${topic.title}/${chapter.title}/${mod.title}`
                           )

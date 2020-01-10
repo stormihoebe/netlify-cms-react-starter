@@ -63,7 +63,7 @@ collections: # A list of collections the CMS should be able to edit
             widget: relation
             collection: chapter
             searchFields: ['title', topic]
-            valueField: title
+            valueField: uid
             displayFields: ['topic', 'title']
 
   - name: chapter
@@ -85,6 +85,18 @@ collections: # A list of collections the CMS should be able to edit
       - label: Image
         name: image
         widget: image
+      - label: 'Unique ID (Danger Zone: Create a unique ID for this record on creation and do not edit this value. This value should be unique to all other chapters.) Example: LifeInsuranceChapter1'
+        name: uid
+        widget: string
+        required: true
+      - label: Topic
+        name: topic
+        widget: relation
+        collection: topic
+        required: true
+        searchFields: ['title']
+        valueField: 'title'
+        displayFields: ['title']
       - label: Modules
         name: modules
         widget: list
@@ -94,17 +106,9 @@ collections: # A list of collections the CMS should be able to edit
             name: module
             widget: relation
             collection: chapterModules
-            searchFields:
-              - title
-            valueField: title
-      - label: Topic
-        name: topic
-        widget: relation
-        collection: topic
-        required: true
-        searchFields: ['title']
-        valueField: 'title'
-        displayFields: ['title']
+            searchFields: ['title']
+            valueField: uid
+            displayFields: ['title']
 
   - name: chapterModules
     label: Module
@@ -125,6 +129,10 @@ collections: # A list of collections the CMS should be able to edit
       - label: Image
         name: image
         widget: image
+      - label: 'Unique ID (Danger Zone: Create a unique ID for this record on creation and do not edit this value. This value should be unique to all other modules.) Example: LifeInsuranceChapterNumberModuleName'
+        name: uid
+        widget: string
+        required: true
 
   - name: 'settings'
     label: 'Settings'

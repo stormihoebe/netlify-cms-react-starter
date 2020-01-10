@@ -29,7 +29,7 @@ export default ({
       )}
       <h1>Available MODULES:</h1>
       {modules.map(({ module: m }) => {
-        const mod = getDocument('modules', 'title', m)
+        const mod = getDocument('modules', 'uid', m)
 
         return (
           <Link
