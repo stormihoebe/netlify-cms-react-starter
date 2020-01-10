@@ -1,8 +1,0 @@
-{
-  "title": "NLEC",
-  "teamName": "my test tenant",
-  "phoneNumber": "test",
-  "logo": "/images/uploads/isabella juskova.jpg",
-  "color": "red",
-  "id": "{{slug}}"
-}
