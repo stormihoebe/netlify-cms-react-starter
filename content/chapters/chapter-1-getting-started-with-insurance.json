@@ -3,5 +3,6 @@
   "description": "Description",
   "image": "/images/uploads/tim-marshall-155597.jpg",
   "uid": "lifeInsuranceChapter1",
+  "module": "LifeInsuraceChapter1ChoosePolicy",
   "topic": "Life Insurance"
 }
