@@ -17,3 +17,5 @@ npm-debug.log
 
 src/data.json
 .history
+# Local Netlify folder
+.netlify

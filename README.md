@@ -1,3 +1,16 @@
+### Requirements 
+1. node version 10+ `nvm use 10`
+
+### [Netlify Large Media](https://docs.netlify.com/large-media/setup/)
+2. git-lfs `brew install git-lfs`
+3. netlify cli `npm install netlify-cli -g` 
+4. netlify large media plugin 
+```
+netlify plugins:install netlify-lm-plugin
+netlify lm:install
+```
+5. link netlify account `netlify link`
+
 # Netlify CMS + React Starter
 
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg?style=flat-square)](http://standardjs.com/)
