@@ -10,6 +10,7 @@ netlify plugins:install netlify-lm-plugin
 netlify lm:install
 ```
 5. link netlify account `netlify link`
+[More Reading on Repository collaboration with Large Media](https://docs.netlify.com/large-media/repository-collaboration/#repository-forks)
 
 # Netlify CMS + React Starter
 
