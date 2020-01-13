@@ -45,3 +45,5 @@ netlify lm:install
 ```
 1. link netlify account `netlify link`
 [More Reading on Repository collaboration with Large Media](https://docs.netlify.com/large-media/repository-collaboration/#repository-forks)
+
+### [Environment Variables](https://docs.netlify.com/configure-builds/environment-variables/)

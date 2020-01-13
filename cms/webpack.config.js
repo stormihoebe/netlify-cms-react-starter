@@ -2,6 +2,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
 
 const production = process.env.NODE_ENV === 'production'
 const mode = production ? 'production' : 'development'
@@ -44,5 +45,6 @@ module.exports = {
     new ExtractTextPlugin({
       filename: 'cms.bundle.css',
     }),
+    new Dotenv(),
   ],
 }
