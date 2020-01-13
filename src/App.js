@@ -11,8 +11,14 @@ import Footer from './components/Footer'
 import ServiceWorkerNotifications from './components/ServiceWorkerNotifications'
 import data from './data.json'
 import { slugify } from './util/url'
+const dotenv = require('dotenv')
+const result = dotenv.config()
+console.log(result)
 
-const CURRENT_TENANT = 'my-tenant'
+console.log(process.env)
+// const CURRENT_TENANT = 'my-tenant'
+const { CURRENT_TENANT } = process.env
+
 const DEFAULT_TOPIC = 'life-insurance'
 
 const RouteWithMeta = ({ component: Component, ...props }) => (
