@@ -3,7 +3,7 @@ backend:
   name: git-gateway
   branch: master # Branch to update (optional; defaults to master)
   ## Set to false to prevent transforming images in media gallery view (may set to true in the future if load-time is a problem -- pricing for transforms https://www.netlify.com/pricing/#large-media)
-  use_large_media_transforms_in_media_library: false
+  # use_large_media_transforms_in_media_library: false
 media_folder: 'public/images/uploads' # Media files will be stored in the repo under static/images/uploads
 public_folder: '/images/uploads' # The src attribute for uploaded media will begin with /images/uploads
 
