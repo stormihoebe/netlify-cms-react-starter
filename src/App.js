@@ -44,8 +44,66 @@ class App extends Component {
       this.state.data[collection].filter(page => page[key] === value)[0]
     )
   }
+
   getDocuments = collection => this.state.data[collection] || []
 
+  routeMeta = () => {
+    const topics = this.getDocuments('topics')
+    const currentTenant = this.getCurrentTenant()
+    return topics.reduce((acc, topic) => {
+      const topicRoute = {
+        key: topic.name,
+        path: `/${topic.name}`,
+        component: TopicLandingPage,
+        tenant: currentTenant,
+        topic: topic,
+        getDocument: this.getDocument,
+      }
+      const chapterRoutes = !topic.chapters
+        ? []
+        : topic.chapters.reduce((chapAcc, { chapter: c }) => {
+            const chapter = this.getDocument('chapters', 'uid', c)
+            if (!chapter) {
+              return chapAcc
+            }
+            const chapterPath = slugify(`/${topic.title}/${chapter.title}`)
+            const chapterRouteProps = {
+              key: chapterPath,
+              path: chapterPath,
+              component: ChapterLandingPage,
+              tenant: currentTenant,
+              topic: topic,
+              chapter: chapter,
+              getDocument: this.getDocument,
+              selectedModule: null,
+            }
+
+            const moduleRoutes = !chapter.modules
+              ? []
+              : chapter.modules.map(({ module: m }) => {
+                  const mod = this.getDocument('modules', 'uid', m)
+                  if (!mod) {
+                    return null
+                  }
+                  const modPath = slugify(
+                    `/${topic.title}/${chapter.title}/${mod.title}`
+                  )
+                  return {
+                    ...chapterRouteProps,
+                    key: modPath,
+                    path: modPath,
+                    selectedModule: mod,
+                  }
+                })
+
+            return [...chapAcc, chapterRouteProps, ...moduleRoutes]
+          }, [])
+
+      return [...acc, topicRoute, ...chapterRoutes]
+    }, [])
+  }
+
+  getCurrentTenant = () => this.getDocument('tenants', 'name', CURRENT_TENANT)
   render() {
     const globalSettings = this.getDocument('settings', 'name', 'global')
     const {
@@ -55,9 +113,9 @@ class App extends Component {
       headerScripts,
     } = globalSettings
 
-    const currentTenant = this.getDocument('tenants', 'name', CURRENT_TENANT)
-    const topics = this.getDocuments('topics')
     const defaultTopic = this.getDocument('topics', 'name', DEFAULT_TOPIC)
+    const routeMetaData = this.routeMeta()
+    const currentTenant = this.getCurrentTenant()
     return (
       <Router>
         <div className="React-Wrap">
@@ -93,68 +151,8 @@ class App extends Component {
               topic={defaultTopic}
               getDocument={this.getDocument}
             />
-            {topics.map(topic => {
-              const path = slugify(`/${topic.title}`)
-              return (
-                <Fragment key={path}>
-                  <RouteWithMeta
-                    key={path}
-                    path={path}
-                    exact
-                    component={TopicLandingPage}
-                    tenant={currentTenant}
-                    topic={this.getDocument('topics', 'name', topic.name)}
-                    getDocument={this.getDocument}
-                  />
-                  {topic.chapters &&
-                    topic.chapters.map(({ chapter: c }) => {
-                      const chapter = this.getDocument('chapters', 'uid', c)
-                      if (!chapter) {
-                        return null
-                      }
-                      const chapterPath = slugify(
-                        `/${topic.title}/${chapter.title}`
-                      )
-                      const chapterRouteProps = {
-                        key: chapterPath,
-                        path: chapterPath,
-                        component: ChapterLandingPage,
-                        tenant: currentTenant,
-                        topic: topic,
-                        chapter: chapter,
-                        getDocument: this.getDocument,
-                        selectedModule: null,
-                      }
-                      return (
-                        // todo: Might be better to not make route module
-                        // and add logic for parsing module
-                        // based on url within the chapter component
-                        <Fragment key={chapterPath}>
-                          <RouteWithMeta {...chapterRouteProps} exact />
-                          {chapter.mpdules &&
-                            chapter.modules.map(({ module: m }) => {
-                              const mod = this.getDocument('modules', 'uid', m)
-                              if (!mod) {
-                                return null
-                              }
-                              const modPath = slugify(
-                                `/${topic.title}/${chapter.title}/${mod.title}`
-                              )
-                              return (
-                                <RouteWithMeta
-                                  {...chapterRouteProps}
-                                  key={modPath}
-                                  path={modPath}
-                                  selectedModule={mod}
-                                  exact
-                                />
-                              )
-                            })}
-                        </Fragment>
-                      )
-                    })}
-                </Fragment>
-              )
+            {routeMetaData.map((route, i) => {
+              return <RouteWithMeta {...route} />
             })}
             <Route render={() => <NoMatch siteUrl={siteUrl} />} />
           </Switch>
