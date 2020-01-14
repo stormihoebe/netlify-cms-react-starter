@@ -16,14 +16,18 @@ export default ({ tenant, topic, getDocument }) => {
       />
       <h1>{color}</h1>
       CHAPTERS
-      {chapters.map(({ chapter: c }) => {
-        const chapter = getDocument('chapters', 'uid', c)
-        return (
-          <Link key={chapter.title} to={slugify(`/${title}/${chapter.title}/`)}>
-            <div>{chapter.title}</div>
-          </Link>
-        )
-      })}
+      {chapters &&
+        chapters.map(({ chapter: c }) => {
+          const chapter = getDocument('chapters', 'uid', c)
+          return (
+            <Link
+              key={chapter.title}
+              to={slugify(`/${title}/${chapter.title}/`)}
+            >
+              <div>{chapter.title}</div>
+            </Link>
+          )
+        })}
     </div>
   )
 }

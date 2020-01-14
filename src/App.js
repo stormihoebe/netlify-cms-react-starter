@@ -106,51 +106,53 @@ class App extends Component {
                     topic={this.getDocument('topics', 'name', topic.name)}
                     getDocument={this.getDocument}
                   />
-                  {topic.chapters.map(({ chapter: c }) => {
-                    const chapter = this.getDocument('chapters', 'uid', c)
-                    if (!chapter) {
-                      return null
-                    }
-                    const chapterPath = slugify(
-                      `/${topic.title}/${chapter.title}`
-                    )
-                    const chapterRouteProps = {
-                      key: chapterPath,
-                      path: chapterPath,
-                      component: ChapterLandingPage,
-                      tenant: currentTenant,
-                      topic: topic,
-                      chapter: chapter,
-                      getDocument: this.getDocument,
-                      selectedModule: null,
-                    }
-                    return (
-                      // todo: Might be better to not make route module
-                      // and add logic for parsing module
-                      // based on url within the chapter component
-                      <Fragment key={chapterPath}>
-                        <RouteWithMeta {...chapterRouteProps} exact />
-                        {chapter.modules.map(({ module: m }) => {
-                          const mod = this.getDocument('modules', 'uid', m)
-                          if (!mod) {
-                            return null
-                          }
-                          const modPath = slugify(
-                            `/${topic.title}/${chapter.title}/${mod.title}`
-                          )
-                          return (
-                            <RouteWithMeta
-                              {...chapterRouteProps}
-                              key={modPath}
-                              path={modPath}
-                              selectedModule={mod}
-                              exact
-                            />
-                          )
-                        })}
-                      </Fragment>
-                    )
-                  })}
+                  {topic.chapters &&
+                    topic.chapters.map(({ chapter: c }) => {
+                      const chapter = this.getDocument('chapters', 'uid', c)
+                      if (!chapter) {
+                        return null
+                      }
+                      const chapterPath = slugify(
+                        `/${topic.title}/${chapter.title}`
+                      )
+                      const chapterRouteProps = {
+                        key: chapterPath,
+                        path: chapterPath,
+                        component: ChapterLandingPage,
+                        tenant: currentTenant,
+                        topic: topic,
+                        chapter: chapter,
+                        getDocument: this.getDocument,
+                        selectedModule: null,
+                      }
+                      return (
+                        // todo: Might be better to not make route module
+                        // and add logic for parsing module
+                        // based on url within the chapter component
+                        <Fragment key={chapterPath}>
+                          <RouteWithMeta {...chapterRouteProps} exact />
+                          {chapter.mpdules &&
+                            chapter.modules.map(({ module: m }) => {
+                              const mod = this.getDocument('modules', 'uid', m)
+                              if (!mod) {
+                                return null
+                              }
+                              const modPath = slugify(
+                                `/${topic.title}/${chapter.title}/${mod.title}`
+                              )
+                              return (
+                                <RouteWithMeta
+                                  {...chapterRouteProps}
+                                  key={modPath}
+                                  path={modPath}
+                                  selectedModule={mod}
+                                  exact
+                                />
+                              )
+                            })}
+                        </Fragment>
+                      )
+                    })}
                 </Fragment>
               )
             })}

@@ -28,18 +28,19 @@ export default ({
         'NO MODULE SELECTED'
       )}
       <h1>Available MODULES:</h1>
-      {modules.map(({ module: m }) => {
-        const mod = getDocument('modules', 'uid', m)
+      {modules &&
+        modules.map(({ module: m }) => {
+          const mod = getDocument('modules', 'uid', m)
 
-        return (
-          <Link
-            key={mod.title}
-            to={slugify(`/${topic.title}/${title}/${mod.title}`)}
-          >
-            <div>{mod.title}</div>
-          </Link>
-        )
-      })}
+          return (
+            <Link
+              key={mod.title}
+              to={slugify(`/${topic.title}/${title}/${mod.title}`)}
+            >
+              <div>{mod.title}</div>
+            </Link>
+          )
+        })}
     </div>
   )
 }
