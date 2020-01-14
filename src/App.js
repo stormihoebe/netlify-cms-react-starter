@@ -152,7 +152,7 @@ class App extends Component {
               getDocument={this.getDocument}
             />
             {routeMetaData.map((route, i) => {
-              return <RouteWithMeta {...route} />
+              return <RouteWithMeta {...route} exact />
             })}
             <Route render={() => <NoMatch siteUrl={siteUrl} />} />
           </Switch>
